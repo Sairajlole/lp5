@@ -1,0 +1,9 @@
+# C++ requirements
+This project does not require any external Python or C++ libraries. It uses standard Windows libraries.
+
+To run this project, you only need:
+1. A C++ compiler (like g++ from MinGW or MSVC)
+2. A Windows Operating System (since it uses <windows.h> for threading)
+
+Compilation Command:
+g++ parallel_quicksort.cpp -o parallel_quicksort.exe
