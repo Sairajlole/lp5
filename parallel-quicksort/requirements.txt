@@ -1,7 +1,5 @@
 # Requirements
 
-This project does not require any external libraries beyond Python/C++ standard libraries.
-
 ## C++ Version
 To run the C++ version:
 1. A C++ compiler (like g++ from MinGW or MSVC)
@@ -10,10 +8,37 @@ To run the C++ version:
 Compilation Command:
 g++ parallel_quicksort.cpp -o parallel_quicksort.exe
 
-## Python Version
-To run the Python version:
+## Python Version (Multiprocessing)
+To run the Python multiprocessing version:
 1. Python 3.6 or higher (uses standard library only)
 2. Cross-platform (works on Windows, Linux, macOS)
 
 Run Command:
 python parallel_quicksort.py
+
+## Python Version (MPI)
+To run the Python MPI version:
+1. Python 3.6 or higher
+2. MPI implementation (OpenMPI or MPICH)
+3. mpi4py library
+
+Installation:
+# Install MPI (choose based on your OS)
+# Ubuntu/Debian:
+sudo apt-get install openmpi-bin libopenmpi-dev
+
+# macOS (using Homebrew):
+brew install open-mpi
+
+# Windows:
+# Download and install Microsoft MPI from:
+# https://docs.microsoft.com/en-us/message-passing-interface/microsoft-mpi
+
+# Install mpi4py
+pip install mpi4py
+
+Run Commands:
+mpiexec -n 1 python parallel_quicksort_mpi.py  # Sequential (1 process)
+mpiexec -n 2 python parallel_quicksort_mpi.py  # 2 processes
+mpiexec -n 4 python parallel_quicksort_mpi.py  # 4 processes
+mpiexec -n 8 python parallel_quicksort_mpi.py  # 8 processes
