@@ -31,7 +31,7 @@ os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"  # suppress TF info logs
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers, Model, regularizers
-from tensorflow.keras.applications import EfficientNetV2B0
+from tensorflow.keras.applications import MobileNetV2
 from tensorflow.keras.callbacks import (
     ModelCheckpoint, EarlyStopping, ReduceLROnPlateau, TensorBoard
 )
@@ -40,10 +40,10 @@ from tensorflow.keras.preprocessing.image import load_img, img_to_array
 # ──────────────────────────────────────────────
 # Config
 # ──────────────────────────────────────────────
-IMG_SIZE       = 224          # ↑ increased for precise EfficientNet
-BATCH_SIZE     = 32           # ↓ halved to prevent OOM with larger images
-EPOCHS_PHASE1  = 10           # Phase 1: train heads only (base frozen)
-EPOCHS_PHASE2  = 50           # Phase 2: fine-tune base + heads
+IMG_SIZE       = 128          # 128×128 — good balance of speed and accuracy
+BATCH_SIZE     = 64           # larger batch for smoother gradients
+EPOCHS_PHASE1  = 5            # Phase 1: train heads only (base frozen)
+EPOCHS_PHASE2  = 15           # Phase 2: fine-tune base + heads
 LEARNING_RATE  = 3e-4         # initial LR for phase 1
 FINETUNE_LR    = 5e-5         # lower LR for fine-tuning
 VAL_SPLIT      = 0.15
@@ -138,7 +138,9 @@ def load_dataset(data_dir):
             images.append(img_arr)
             ages.append(age / 120.0)  # normalize age to [0, 1]
             genders.append(gender)
-        except Exception:
+        except Exception as e:
+            if skipped < 3:
+                print(f"  [WARN] Failed to load {os.path.basename(path)}: {e}")
             skipped += 1
 
         if (i + 1) % 2000 == 0:
@@ -183,7 +185,7 @@ def build_model():
       Head 2 →  Age regression (sigmoid, 0–1 range)
     """
     # Base model — initially fully frozen
-    base = EfficientNetV2B0(
+    base = MobileNetV2(
         input_shape=(IMG_SIZE, IMG_SIZE, 3),
         include_top=False,
         weights="imagenet"

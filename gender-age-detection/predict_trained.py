@@ -35,7 +35,7 @@ KERAS_MODEL = os.path.join(TRAINED_DIR, "age_gender_model.keras")
 # ──────────────────────────────────────────────
 # Constants
 # ──────────────────────────────────────────────
-IMG_SIZE = 224  # must match train.py IMG_SIZE
+IMG_SIZE = 128  # must match train.py IMG_SIZE
 CONFIDENCE_THRESHOLD = 0.7
 PADDING = 20
 
